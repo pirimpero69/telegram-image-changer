@@ -1,0 +1,16 @@
+{
+  "name": "telegram-image-changer",
+  "version": "1.0.0",
+  "description": "Cambia un'immagine su una pagina web in base ai messaggi in un gruppo Telegram",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "IlTuoNome",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "node-telegram-bot-api": "^0.61.0",
+    "socket.io": "^4.8.1"
+  }
+}
