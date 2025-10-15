@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Telegram Image Changer</title>
+</head>
+<body>
+  <h1>Immagine aggiornata dal gruppo Telegram</h1>
+  <img id="image" src="default.jpg" width="400">
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const img = document.getElementById('image');
+    const socket = io();
+
+    // 🔧 All'avvio, carica l'ultima immagine
+    fetch('/api/last-image')
+      .then(res => res.json())
+      .then(data => {
+        img.src = data.image;
+      });
+
+    // 🔁 Quando arriva un'immagine nuova via Socket.IO
+    socket.on('changeImage', (imageName) => {
+      img.src = imageName;
+    });
+  </script>
+</body>
+</html>
