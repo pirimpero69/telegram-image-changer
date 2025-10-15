@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stato NOTAM - San Giuliano Terme</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Stile CSS -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #f4f4f4 url('https://www.transparenttextures.com/patterns/topography.png');
+      background-size: contain;
+      background-repeat: repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #2a2a2a;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    #image {
+      width: 90%;
+      max-width: 420px;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.5s ease-in-out;
+      border: 4px solid #ddd;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 0 20px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Situazione attuale del NOTAM</h1>
+  <h2>San Giuliano Terme • Voli consentiti solo se NOTAM è attivo</h2>
+
+  <img id="image" src="default.jpg" alt="Stato NOTAM" />
+
+  <footer>
+    Questa immagine rappresenta lo stato attuale del NOTAM per l’area di San Giuliano Terme.<br />
+    Vola <strong>solo se l'immagine indica che il NOTAM è aperto</strong>.<br /><br />
+    Lo stato viene aggiornato in tempo reale da chi gestisce le aperture/chiusure via Telegram.
+  </footer>
+
+  <!-- Socket.IO -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const img = document.getElementById('image');
+    const socket = io();
+
+    // Carica l'ultima immagine al caricamento
+    fetch('/api/last-image')
+      .then(res => res.json())
+      .then(data => {
+        img.src = data.image;
+      });
+
+    // Cambia immagine in tempo reale
+    socket.on('changeImage', (imageName) => {
+      img.style.opacity = 0;
+      setTimeout(() => {
+        img.src = imageName;
+        img.style.opacity = 1;
+      }, 300);
+    });
+  </script>
+</body>
+</html>
