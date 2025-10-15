@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telegram Image Changer</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Stile CSS base -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f4f4f4, #e2e2e2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    #image {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Immagine dal gruppo Telegram</h1>
+  <img id="image" src="default.jpg" alt="Immagine dinamica">
+
+  <footer>
+    Ultima immagine aggiornata in tempo reale.<br>
+    Scrivi "chiuso" o "aperto" nel gruppo Telegram per cambiarla.
+  </footer>
+
+  <!-- Socket.IO -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const img = document.getElementById('image');
+    const socket = io();
+
+    // Carica l'ultima immagine al caricamento
+    fetch('/api/last-image')
+      .then(res => res.json())
+      .then(data => {
+        img.src = data.image;
+      });
+
+    // Cambia immagine in tempo reale
+    socket.on('changeImage', (imageName) => {
+      // Animazione fade-out e fade-in
+      img.style.opacity = 0;
+      setTimeout(() => {
+        img.src = imageName;
+        img.style.opacity = 1;
+      }, 300);
+    });
+  </script>
+</body>
+</html>
